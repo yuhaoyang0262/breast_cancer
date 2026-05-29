@@ -1,0 +1,16 @@
+queue = pending_queue_ids()
+
+if not queue:
+    send_json(self, {
+        "caseId": None,
+        "message": "当前无待复核病例。请先在患者端提交高风险病例。"
+    })
+    return
+
+store.push_undo("处理队列")
+case_id = queue[0]
+
+for case in store.cases:
+    if case.id == case_id:
+        case.status = "医生已复核"
+        break
